@@ -35,12 +35,24 @@ MSA EZ
 4) Policy 등록
 5) 어그리게이트 등록(노란색)
 6) BC
-7) Policy로 명령어 대체
+7) Policy로 명령어 대체 -> policy가 어그리게이트에 붙음
 8) 어그리게이트 테이블 정보 등록
 9) 이벤트에서 싱크 테이블
 10) 조회는 policy+aggregate 대신에 readModel(초록색)으로 -> CQRS
 Meterialized View - 리드 모델에서 쓰는 데이터베이스 저장소
 Correlation key
+
+이벤트는 포조 껍데기 인터페이스일 뿐, 다른팀에서 원하는 내용임
+어그리게이트가 도메인의 핵심이고 외부모듈로 연계 가능함
+
+리드모델(초록색)은 액터와 커맨드 사이에 들어감
+
+policy가 돌아올 때는 커맨드 자리에 위치
+
+pub/sub 은 메시징 처리 - 점선 - 약결합 - 이벤트랑 policy랑 붙을 때
+req/res 는 동기화 처리할 때 - 실선 - 이벤트랑 command랑 붙을 때
+
+이벤트 드리븐이 DDD 안의 기법이고 MSA에서 DDD의 이벤트 드리븐하게 분석 설계하는 것임   
 
 kafka?
 
