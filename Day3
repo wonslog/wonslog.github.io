@@ -1,0 +1,85 @@
+Log Aggregation
+GitOps
+Stateless
+JWT
+JPA
+Kafka(Message broker)
+스프링 클라우드 스트림 메시징(이벤트 스토밍 Policy)
+서킷 브레이크
+CQRS
+코레오그라피, 오케스트레이션
+프로비저닝
+하이버네이트
+HATEOAS
+==================================================================
+Day3
+
+헥사고날 아키텍처
+이너 영역에 비즈니스 로직을 품고 있다
+
+이벤트는 대문자로 (Orderplaced)
+
+@KafkaListener(topics = "shopping")
+카프카로 모니터링 하다가 토픽에 나와있는 이벤트가 들어오면 실행됨
+
+
+http GET localhost:8080 = http localhost:8080 메소드가 없으면 GET으로 자동 실행
+http POST localhost:8080/products name="TV" stock=10 POST는 INSERT
+http PATCH "http://localhost:8080/products/1" stock=20 패치는 UPDATE
+http DELETE "http://localhost:8080/products/1" 삭제
+
+이벤트는 다른 팀의 needs에 의해서 붙이는 것임
+이벤트에 Policy가 안붙으면 이벤트는 필요가 없음
+
+등록/삭제/수정 전 후 총 6개
+
+json - 교환 포맷(xml 안씀)
+
+스프링 클라우드 팀에서 만든 카프카 라이브러리를 쓸 예정
+
+bean - 객체 a가 객체 b를 참조할 때 미리 만들어줌
+
+다른 BC의 이벤트에서 우리 Policy를 Pub/Sub 할 순 있어도 같은 BC에서 하는 경우는 없음
+
+AbstractEvent.java
+이벤트 발사할 때 직렬화하는 부분을 따로 빼놓음 publish 하는 부분
+이벤트들이 상속 받음
+이벤트가 너무 많으면 보기 힘들기 땜에 따로 빼놓은 것임
+
+delivery에 orderPlaced와 orderCancelled가 있는 이유는
+delivery에서 policy 하면서 policyHandler가 리스닝하고 있는 policy의 객체를 컨버팅하는게 다루기 편하므로
+필요한 변수만 적으면 자동으로 해당 데이터만 가져옴
+
+application.yml
+--- 트리플 대쉬
+
+트리플 대쉬 구분자를 쓰면 트리플 대쉬 안에 있는 속성을 오버라이딩할 수 있음
+
+포트가 사용중일 때는 kill 후 진행
+kill -9 pid
+
+플러그인 문제가 발생할 때는 pom.xml이 있는 위치에서 spring-boot:run 입력
+
+Strangler Pattern
+점진적 MSA화
+코어가 가장 마지막에 MSA화 함
+appication.yml 파일에 각 서비스를 포트로 분기함
+
+routes 는 array 타입이고
+- 싱글 대쉬를 붙여서 쓴다
+routes:
+        - id: order
+          uri: http://localhost:8081
+          predicates:
+            - Path=/orders/**
+
+카프카는 Client Polling 하는 구조이다
+
+게이트웨이
+라우터
+
+1) FeignClient를 활용하여 부분적 MSA화
+2) Event Shunting - Pub/Sub이 가능한 라이브러리를 통해서 MSA화, OGG 또는 ETL 같은 소프트웨어 필요, kafka에도 있음(kafka connect)
+
+KEYCLOAK
+WildFly(오픈소스 WAS)
