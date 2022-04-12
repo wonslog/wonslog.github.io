@@ -1,0 +1,85 @@
+회사 오픽
+비타민
+
+Day 5
+
+BizDevOps
+
+CDC를 구현해주는 kafka connect
+
+Saga - 로컬 트랜잭션의 연속
+CQRS(pub-sub에서의 읽기 구현체) Command And Quuuuu Responsibility
+My Page와 같은?
+기존에는 모든 대응되는 테이블을 조인하고 뷰로 보여줌
+
+corelation key(바통)
+
+BFF Backend for Frontend
+
+카프카 서버 = 카프카 브로커
+단독방 = 토픽 = 1개 이상의 파티션으로 구성
+
+카프카 컨슈머 리밸런싱
+
+Lag 수가 많아지면 감당이 안되는 상황이므로 파티션?을 늘려줘야함 - 이런 모니터링이 필요함
+
+카프카 설정
+어플리케이션.yml
+      bindings:
+        event-in:
+          group(컨슈머 그룹): order
+          destination(토픽, 단톡방): kafkatest
+          contentType: application/json
+        event-out:
+          destination: kafkatest
+          contentType: application/json
+
+로그에서
+partitions assigned: [kafkatest-0]
+0번째 파티션에 할당됐다는 내용
+
+야믈 파일의 컨슈머 그룹이 동일할 때 먼저 할당된 파티션이 있으면 추가적으로 할당이 안됨
+partitions assigned: []
+
+자동 커밋 모드일 때 중복처리 될 수 있다.
+중복처리 방지 방법
+1) 멱등처리, 멱등함수 - 동일한 결과가 나오는 함수, 메세지
+
+Retry & DLQ
+
+  cloud:
+    stream:
+      kafka:
+        bindings:
+          event-in:
+            consumer:
+              enableDlq: true
+              dlqName(토픽): dlq-kafkatest
+              dlqPartitions: 1
+
+
+kafka connect = 데이터 파이프라인
+
+커넥터가 필요한 상황
+마이크로 서비스가 생산해내는 데이터들이 클라우드 스토리지에 저장된다.
+그 외에 익스터널 시스템(핑크색)과 동기화(인터페이스)가 필요할 때 사용됨
+이기종간의 데이터 동기화임
+
+카프카 커넥터 통으로 날림
+
+pub-sub 조회
+분산 서비스 환경의 프론트엔드에서 데이터 조회에는 성능(속도) 이슈가 있음
+
+GraphQL 그래프 쿼리 랭귀지(페이스북이 만듦)
+Underfetching
+Overfetching - 부하를 줄여주는
+
+CQRS의 확장
+각 이벤트가 발생할 때마다 Materialized View에 축적을 해서 보여줌
+장점 : 성능, 장애격리
+
+M view 기반의 CQRS
+
+apollo 라는 npm 기반
+
+Clean Architecture
